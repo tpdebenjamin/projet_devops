@@ -8,7 +8,7 @@ pipeline {
     }
 
     environment {
-        GIT_REPO = 'git@github.com:tpdebenjamin/projet_devops.git'  // Remplace par ton lien
+        GIT_REPO = 'git@github.com:tpdebenjamin/projet_devops'
     }
 
     stages {
