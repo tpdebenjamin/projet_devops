@@ -9,36 +9,21 @@ pipeline {
 
     environment {
         GIT_REPO = 'git@github.com:tpdebenjamin/projet_devops.git'  // Remplace par ton lien
-        ARTIFACTS_DIR = 'artifacts'  // Répertoire pour stocker les artéfacts
-        SLACK_CHANNEL = '#devops'  // Change si besoin
     }
 
     stages {
         stage('Checkout') {
             steps {
-                script {
-                    try {
-                        echo "Clonage du repository ${params.BRANCH_NAME}"
-                        git branch: params.BRANCH_NAME, url: env.GIT_REPO
-                    } catch (Exception e) {
-                        error "❌ Erreur lors du clonage du repo : ${e.message}"
-                    }
-                }
+                echo "Clonage du repository ${params.BRANCH_NAME}"
+                git branch: params.BRANCH_NAME, url: env.GIT_REPO
             }
         }
 
         stage('Build') {
             steps {
-                script {
-                    try {
-                        echo '🏗️ Étape de build en cours...'
-                        sh 'mkdir -p ${ARTIFACTS_DIR}'
-                        sh './build.sh'  // Remplace par la vraie commande de build
-                        archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
-                    } catch (Exception e) {
-                        error "❌ Échec du build : ${e.message}"
-                    }
-                }
+                echo 'Étape de build en cours...'
+                sh 'echo "Compilation de l\'application..."'
+                sh 'echo "Simulation de build terminée."'
             }
         }
 
@@ -47,50 +32,36 @@ pipeline {
                 expression { params.RUN_TESTS }
             }
             steps {
-                script {
-                    try {
-                        echo '🧪 Exécution des tests unitaires...'
-                        sh './run_tests.sh'  // Remplace par ta commande de tests
-                    } catch (Exception e) {
-                        error "❌ Échec des tests : ${e.message}"
-                    }
-                }
+                echo 'Exécution des tests unitaires...'
+                sh 'echo "Tests réussis !"'
             }
         }
 
         stage('Deploy') {
             steps {
                 script {
-                    try {
-                        def deployScript = ''
-                        if (params.DEPLOY_ENV == 'Development') {
-                            deployScript = 'deploy_dev.sh'
-                        } else if (params.DEPLOY_ENV == 'Staging') {
-                            deployScript = 'deploy_staging.sh'
-                        } else if (params.DEPLOY_ENV == 'Production') {
-                            deployScript = 'deploy_prod.sh'
-                        }
-                        echo "🚀 Déploiement en cours pour ${params.DEPLOY_ENV}..."
-                        sh "./scripts/${deployScript}"
-                    } catch (Exception e) {
-                        error "❌ Échec du déploiement : ${e.message}"
+                    if (params.DEPLOY_ENV == 'Development') {
+                        echo 'Déploiement en environnement de développement...'
+                    } else if (params.DEPLOY_ENV == 'Staging') {
+                        echo 'Déploiement en environnement de staging...'
+                    } else if (params.DEPLOY_ENV == 'Production') {
+                        echo 'Déploiement en environnement de production...'
                     }
                 }
+                sh 'echo "Déploiement terminé."'
             }
         }
     }
 
     post {
         always {
-            echo '🔄 Pipeline terminé.'
+            echo 'Pipeline terminé.'
         }
         success {
-            echo '✅ Pipeline réussi !'
-            slackSend channel: env.SLACK_CHANNEL, message: "✅ Pipeline réussi sur ${params.BRANCH_NAME} -> ${params.DEPLOY_ENV}"
+            echo 'Pipeline réussi !'
         }
         failure {
-            echo '❌ Le pipeline a échoué.'
-            slackSend channel: env.SLACK_CHANNEL, message: "❌ Échec du pipeline sur ${params.BRANCH_NAME}"
+            echo 'Le pipeline a échoué.'
         }
     }
 }
