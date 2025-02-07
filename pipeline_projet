@@ -28,14 +28,14 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Compilation du programme Java...'
-                sh 'javac src/Main.java -d bin'
+                bat 'javac src\\Main.java -d bin'
             }
         }
 
         stage('Run') {
             steps {
                 echo "Exécution du programme pour le mois : ${params.MOIS}"
-                sh "java -cp bin Main ${params.MOIS}"
+                bat "java -cp bin Main ${params.MOIS}"
             }
         }
     }
