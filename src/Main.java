@@ -11,10 +11,10 @@ public class Main {
         
         switch (mois) {
             case "Janvier":
-                System.out.println("Rédiger un journal intime.");
+                System.out.println("Rediger un journal intime.");
                 break;
             case "Février":
-                System.out.println("Redécorer la maison pour se sentir bien.");
+                System.out.println("Redecorer la maison pour se sentir bien.");
                 break;
             case "Mars":
                 System.out.println("Prendre soin de soi.");
@@ -26,7 +26,7 @@ public class Main {
                 System.out.println("Faites quelque chose que vous n’avez jamais fait auparavant.");
                 break;
             case "Juin":
-                System.out.println("Passez du temps avec le vôtre.");
+                System.out.println("Passez du temps avec le votre.");
                 break;
             case "Juillet":
                 System.out.println("Aller à un concert et danser.");
@@ -35,10 +35,10 @@ public class Main {
                 System.out.println("Dormir une nuit sur la plage.");
                 break;
             case "Septembre":
-                System.out.println("Découvrez le monde.");
+                System.out.println("Decouvrez le monde.");
                 break;
             case "Octobre":
-                System.out.println("Étudiez.");
+                System.out.println("Etudiez.");
                 break;
             case "Novembre":
                 System.out.println("Apprendre à jouer d'un instrument.");
