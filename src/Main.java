@@ -1,71 +1,53 @@
 public class Main {
 
     public static void main(String[] args) {
-        System.out.println("Bienvenue dans l'application des objectifs mensuels !");
-        System.out.println("----------------------------------------------------");
+        if (args.length == 0) {
+            System.out.println("Veuillez spécifier un mois.");
+            return;
+        }
 
-        // Affichage des objectifs de chaque mois
-        objectifJanvier();
-        objectifFévrier();
-        objectifMars();
-        objectifAvril();
-        objectifMai();
-        objectifJuin();
-        objectifJuillet();
-        objectifAoût();
-        objectifSeptembre();
-        objectifOctobre();
-        objectifNovembre();
-        objectifDécembre();
-    }
-
-    // Objectifs de chaque mois
-    public static void objectifJanvier() {
-        System.out.println("Janvier : Rédiger un journal intime.");
-    }
-
-    public static void objectifFévrier() {
-        System.out.println("Février : Redécorer la maison pour se sentir bien.");
-    }
-
-    public static void objectifMars() {
-        System.out.println("Mars : Prendre soin de soi.");
-    }
-
-    public static void objectifAvril() {
-        System.out.println("Avril : Soyez gentil.");
-    }
-
-    public static void objectifMai() {
-        System.out.println("Mai : Faites quelque chose que vous n’avez jamais fait auparavant.");
-    }
-
-    public static void objectifJuin() {
-        System.out.println("Juin : Passez du temps avec le vôtre.");
-    }
-
-    public static void objectifJuillet() {
-        System.out.println("Juillet : Aller à un concert et danser.");
-    }
-
-    public static void objectifAoût() {
-        System.out.println("Août : Dormir une nuit sur la plage.");
-    }
-
-    public static void objectifSeptembre() {
-        System.out.println("Septembre : Découvrez le monde.");
-    }
-
-    public static void objectifOctobre() {
-        System.out.println("Octobre : Étudiez.");
-    }
-
-    public static void objectifNovembre() {
-        System.out.println("Novembre : Apprendre à jouer d'un instrument.");
-    }
-
-    public static void objectifDécembre() {
-        System.out.println("Décembre : Respirez consciencieusement.");
+        String mois = args[0];
+        System.out.println("Objectif pour le mois de " + mois + " :");
+        
+        switch (mois) {
+            case "Janvier":
+                System.out.println("Rédiger un journal intime.");
+                break;
+            case "Février":
+                System.out.println("Redécorer la maison pour se sentir bien.");
+                break;
+            case "Mars":
+                System.out.println("Prendre soin de soi.");
+                break;
+            case "Avril":
+                System.out.println("Soyez gentil.");
+                break;
+            case "Mai":
+                System.out.println("Faites quelque chose que vous n’avez jamais fait auparavant.");
+                break;
+            case "Juin":
+                System.out.println("Passez du temps avec le vôtre.");
+                break;
+            case "Juillet":
+                System.out.println("Aller à un concert et danser.");
+                break;
+            case "Août":
+                System.out.println("Dormir une nuit sur la plage.");
+                break;
+            case "Septembre":
+                System.out.println("Découvrez le monde.");
+                break;
+            case "Octobre":
+                System.out.println("Étudiez.");
+                break;
+            case "Novembre":
+                System.out.println("Apprendre à jouer d'un instrument.");
+                break;
+            case "Décembre":
+                System.out.println("Respirez consciencieusement.");
+                break;
+            default:
+                System.out.println("Mois non reconnu. Veuillez entrer un mois valide.");
+        }
     }
 }
-
