@@ -7,18 +7,16 @@ pipeline {
     }
 
     parameters {
-        string(name: 'BRANCH_NAME', defaultValue: 'main', description: 'Quelle branche Git déployer ?')
-        choice(name: 'DEPLOY_ENV', choices: ['Development', 'Staging', 'Production'], description: 'Choisir l’environnement de déploiement')
-        booleanParam(name: 'RUN_TESTS', defaultValue: true, description: 'Exécuter les tests unitaires ?')
+        choice(name: 'MOIS', choices: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'], description: 'Sélectionnez un mois pour afficher son objectif.')
     }
 
     stages {
         stage('Checkout') {
             steps {
-                echo "Clonage du repository ${params.BRANCH_NAME}..."
+                echo "Clonage du repository depuis la branche main..."
                 checkout([
                     $class: 'GitSCM', 
-                    branches: [[name: params.BRANCH_NAME]], 
+                    branches: [[name: 'main']], 
                     userRemoteConfigs: [[
                         url: env.GIT_REPO,
                         credentialsId: env.GIT_CREDENTIALS_ID
@@ -29,34 +27,15 @@ pipeline {
 
         stage('Build') {
             steps {
-                echo 'Étape de build en cours...'
-                sh 'npm install'  // Remplace si ton projet n’est pas en Node.js
-                sh 'npm run build'  // Commande de build
+                echo 'Compilation du programme Java...'
+                sh 'javac src/Main.java -d bin'
             }
         }
 
-        stage('Tests') {
-            when {
-                expression { params.RUN_TESTS }
-            }
+        stage('Run') {
             steps {
-                echo 'Exécution des tests unitaires...'
-                sh 'npm test'  // Remplace si tu utilises un autre outil de test
-            }
-        }
-
-        stage('Deploy') {
-            steps {
-                script {
-                    echo "Déploiement vers l’environnement : ${params.DEPLOY_ENV}"
-                    if (params.DEPLOY_ENV == 'Development') {
-                        sh 'echo "Déploiement en développement..."'
-                    } else if (params.DEPLOY_ENV == 'Staging') {
-                        sh 'echo "Déploiement en staging..."'
-                    } else if (params.DEPLOY_ENV == 'Production') {
-                        sh 'echo "Déploiement en production..."'
-                    }
-                }
+                echo "Exécution du programme pour le mois : ${params.MOIS}"
+                sh "java -cp bin Main ${params.MOIS}"
             }
         }
     }
@@ -66,7 +45,7 @@ pipeline {
             echo 'Pipeline terminé.'
         }
         success {
-            echo 'Pipeline réussi !'
+            echo 'Pipeline exécuté avec succès !'
         }
         failure {
             echo 'Le pipeline a échoué. Vérifiez les erreurs.'
