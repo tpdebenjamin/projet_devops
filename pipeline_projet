@@ -1,29 +1,38 @@
 pipeline {
     agent any
 
+    environment {
+        GIT_REPO = 'git@github.com:tpdebenjamin/projet_devops.git'  // Change si nécessaire
+        GIT_CREDENTIALS_ID = 'your-credentials-id'  // Change par l’ID de tes credentials Jenkins
+    }
+
     parameters {
         string(name: 'BRANCH_NAME', defaultValue: 'main', description: 'Quelle branche Git déployer ?')
         choice(name: 'DEPLOY_ENV', choices: ['Development', 'Staging', 'Production'], description: 'Choisir l’environnement de déploiement')
         booleanParam(name: 'RUN_TESTS', defaultValue: true, description: 'Exécuter les tests unitaires ?')
     }
 
-    environment {
-        GIT_REPO = 'git@github.com:tpdebenjamin/projet_devops.git'  // Remplace par ton lien
-    }
-
     stages {
         stage('Checkout') {
             steps {
-                echo "Clonage du repository ${params.BRANCH_NAME}"
-                git branch: params.BRANCH_NAME, url: env.GIT_REPO
+                echo "Clonage du repository ${params.BRANCH_NAME}..."
+                checkout([
+                    $class: 'GitSCM', 
+                    branches: [[name: params.BRANCH_NAME]], 
+                    userRemoteConfigs: [[
+                        url: env.GIT_REPO,
+                        credentialsId: env.GIT_CREDENTIALS_ID
+                    ]]
+                ])
             }
         }
 
         stage('Build') {
             steps {
                 echo 'Étape de build en cours...'
-                sh 'echo "Compilation de l\'application..."'
-                sh 'echo "Simulation de build terminée."'
+                // Exemples pour un projet Node.js
+                sh 'npm install'
+                sh 'npm run build'
             }
         }
 
@@ -33,22 +42,24 @@ pipeline {
             }
             steps {
                 echo 'Exécution des tests unitaires...'
-                sh 'echo "Tests réussis !"'
+                // Exemples pour un projet Node.js
+                sh 'npm test'
             }
         }
 
         stage('Deploy') {
             steps {
                 script {
+                    echo "Déploiement vers l’environnement : ${params.DEPLOY_ENV}"
+                    // Exemples simples pour afficher l'environnement sélectionné
                     if (params.DEPLOY_ENV == 'Development') {
-                        echo 'Déploiement en environnement de développement...'
+                        sh 'echo "Déploiement en développement..."'
                     } else if (params.DEPLOY_ENV == 'Staging') {
-                        echo 'Déploiement en environnement de staging...'
+                        sh 'echo "Déploiement en staging..."'
                     } else if (params.DEPLOY_ENV == 'Production') {
-                        echo 'Déploiement en environnement de production...'
+                        sh 'echo "Déploiement en production..."'
                     }
                 }
-                sh 'echo "Déploiement terminé."'
             }
         }
     }
@@ -61,7 +72,7 @@ pipeline {
             echo 'Pipeline réussi !'
         }
         failure {
-            echo 'Le pipeline a échoué.'
+            echo 'Le pipeline a échoué. Vérifiez les erreurs.'
         }
     }
 }
