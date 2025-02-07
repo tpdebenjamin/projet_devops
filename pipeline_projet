@@ -16,7 +16,7 @@ pipeline {
                 echo "Clonage du repository depuis la branche main..."
                 checkout([
                     $class: 'GitSCM', 
-                    branches: [[name: 'main']], 
+                    branches: [[name: 'test']], 
                     userRemoteConfigs: [[
                         url: env.GIT_REPO,
                         credentialsId: env.GIT_CREDENTIALS_ID
