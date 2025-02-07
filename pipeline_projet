@@ -1,0 +1,67 @@
+pipeline {
+    agent any
+
+    parameters {
+        string(name: 'BRANCH_NAME', defaultValue: 'main', description: 'Quelle branche Git déployer ?')
+        choice(name: 'DEPLOY_ENV', choices: ['Development', 'Staging', 'Production'], description: 'Choisir l’environnement de déploiement')
+        booleanParam(name: 'RUN_TESTS', defaultValue: true, description: 'Exécuter les tests unitaires ?')
+    }
+
+    environment {
+        GIT_REPO = 'git@github.com:tpdebenjamin/projet_devops.git'  // Remplace par ton lien
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                echo "Clonage du repository ${params.BRANCH_NAME}"
+                git branch: params.BRANCH_NAME, url: env.GIT_REPO
+            }
+        }
+
+        stage('Build') {
+            steps {
+                echo 'Étape de build en cours...'
+                sh 'echo "Compilation de l\'application..."'
+                sh 'echo "Simulation de build terminée."'
+            }
+        }
+
+        stage('Tests') {
+            when {
+                expression { params.RUN_TESTS }
+            }
+            steps {
+                echo 'Exécution des tests unitaires...'
+                sh 'echo "Tests réussis !"'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                script {
+                    if (params.DEPLOY_ENV == 'Development') {
+                        echo 'Déploiement en environnement de développement...'
+                    } else if (params.DEPLOY_ENV == 'Staging') {
+                        echo 'Déploiement en environnement de staging...'
+                    } else if (params.DEPLOY_ENV == 'Production') {
+                        echo 'Déploiement en environnement de production...'
+                    }
+                }
+                sh 'echo "Déploiement terminé."'
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline terminé.'
+        }
+        success {
+            echo 'Pipeline réussi !'
+        }
+        failure {
+            echo 'Le pipeline a échoué.'
+        }
+    }
+}
