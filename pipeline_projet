@@ -1,6 +1,13 @@
 pipeline {
     agent any
 
+    parameters {
+        choice(name: 'MOIS', choices: [
+            'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
+            'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'
+        ], description: 'Sélectionne un mois')
+    }
+
     stages {
         stage('Objectif du mois') {
             steps {
@@ -20,8 +27,8 @@ pipeline {
                         "Décembre": "Respirez consciencieusement"
                     ]
 
-                    def mois = "Avril" // <-- tu peux changer dynamiquement selon la date
-                    echo "🎯 Objectif du mois de ${mois} : ${objectifs[mois]}"
+                    echo "🎯 Objectif pour le mois de ${params.MOIS} :"
+                    echo "➡ ${objectifs[params.MOIS]}"
                 }
             }
         }
@@ -29,21 +36,26 @@ pipeline {
         stage('Validation par l\'utilisateur') {
             steps {
                 script {
-                    def confirmation = input(
-                        message: "As-tu atteint ton objectif ce mois-ci ?",
-                        ok: "Répondre",
+                    def reponse = input(
+                        message: "As-tu atteint ton objectif pour le mois de ${params.MOIS} ?",
                         parameters: [
                             choice(name: 'Réponse', choices: ['Oui', 'Non'], description: 'Sélectionne ta réponse')
                         ]
                     )
 
-                    if (confirmation == 'Oui') {
-                        echo "🎉 Super travail, continue comme ça !"
+                    if (reponse == 'Oui') {
+                        echo "🎉 Bravo pour avoir relevé le challenge de ${params.MOIS} !"
                     } else {
-                        echo "💪 Ne lâche rien ! Tu peux y arriver !"
+                        echo "💪 Tu peux encore le faire ! Courage pour ton objectif de ${params.MOIS}."
                     }
                 }
             }
+        }
+    }
+
+    post {
+        always {
+            echo "✅ Pipeline terminé."
         }
     }
 }
