@@ -27,26 +27,21 @@ pipeline {
                         "Décembre": "Respirez consciencieusement"
                     ]
 
+                    def objectif = objectifs[params.MOIS]
                     echo "🎯 Objectif pour le mois de ${params.MOIS} :"
-                    echo "➡ ${objectifs[params.MOIS]}"
-                }
-            }
-        }
+                    echo "➡ ${objectif}"
 
-        stage('Validation par l\'utilisateur') {
-            steps {
-                script {
                     def reponse = input(
-                        message: "As-tu atteint ton objectif pour le mois de ${params.MOIS} ?",
+                        message: "As-tu réalisé l'objectif suivant : ${objectif} ?",
                         parameters: [
                             choice(name: 'Réponse', choices: ['Oui', 'Non'], description: 'Sélectionne ta réponse')
                         ]
                     )
 
                     if (reponse == 'Oui') {
-                        echo "🎉 Bravo pour avoir relevé le challenge de ${params.MOIS} !"
+                        echo "🎉 Bravo ! Tu as réussi à atteindre ton objectif : ${objectif} 💪"
                     } else {
-                        echo "💪 Tu peux encore le faire ! Courage pour ton objectif de ${params.MOIS}."
+                        echo "💡 Tu peux le faire ! Continue d’avancer vers : ${objectif}"
                     }
                 }
             }
