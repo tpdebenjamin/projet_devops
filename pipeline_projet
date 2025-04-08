@@ -1,54 +1,49 @@
 pipeline {
     agent any
 
-    environment {
-        GIT_REPO = 'https://github.com/tpdebenjamin/projet_devops.git'
-        GIT_CREDENTIALS_ID = 'projet_devops'
-    }
-
-    parameters {
-        choice(name: 'MOIS', choices: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'], description: 'Sélectionnez un mois pour afficher son objectif.')
-    }
-
     stages {
-        stage('Checkout') {
+        stage('Objectif du mois') {
             steps {
-                echo "Clonage du repository depuis la branche main..."
-                checkout([
-                    $class: 'GitSCM', 
-                    branches: [[name: 'test']], 
-                    userRemoteConfigs: [[
-                        url: env.GIT_REPO,
-                        credentialsId: env.GIT_CREDENTIALS_ID
-                    ]]
-                ])
+                script {
+                    def objectifs = [
+                        "Janvier": "Rédiger un journal intime",
+                        "Février": "Redécorer la maison pour se sentir bien",
+                        "Mars": "Prendre soin de soi",
+                        "Avril": "Soyez gentil",
+                        "Mai": "Faites quelque chose que vous n’avez jamais fait auparavant",
+                        "Juin": "Passez du temps avec le vôtre",
+                        "Juillet": "Aller à un concert et danser",
+                        "Août": "Dormir une nuit sur la plage",
+                        "Septembre": "Découvrez le monde",
+                        "Octobre": "Étudiez",
+                        "Novembre": "Apprendre à jouer d'un instrument",
+                        "Décembre": "Respirez consciencieusement"
+                    ]
+
+                    def mois = "Avril" // <-- tu peux changer dynamiquement selon la date
+                    echo "🎯 Objectif du mois de ${mois} : ${objectifs[mois]}"
+                }
             }
         }
 
-        stage('Build') {
+        stage('Validation par l\'utilisateur') {
             steps {
-                echo 'Compilation du programme Java...'
-                bat 'javac src\\Main.java -d bin'
-            }
-        }
+                script {
+                    def confirmation = input(
+                        message: "As-tu atteint ton objectif ce mois-ci ?",
+                        ok: "Répondre",
+                        parameters: [
+                            choice(name: 'Réponse', choices: ['Oui', 'Non'], description: 'Sélectionne ta réponse')
+                        ]
+                    )
 
-        stage('Run') {
-            steps {
-                echo "Exécution du programme pour le mois : ${params.MOIS}"
-                bat "java -cp bin Main ${params.MOIS}"
+                    if (confirmation == 'Oui') {
+                        echo "🎉 Super travail, continue comme ça !"
+                    } else {
+                        echo "💪 Ne lâche rien ! Tu peux y arriver !"
+                    }
+                }
             }
-        }
-    }
-
-    post {
-        always {
-            echo 'Pipeline terminé.'
-        }
-        success {
-            echo 'Pipeline exécuté avec succès !'
-        }
-        failure {
-            echo 'Le pipeline a échoué. Vérifiez les erreurs.'
         }
     }
 }
