@@ -6,6 +6,7 @@ public class Main {
             return;
         }
 
+        
         String mois = args[0];
         System.out.println("Objectif pour le mois de " + mois + " :");
         
