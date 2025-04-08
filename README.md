@@ -19,6 +19,7 @@ Ce projet est une application simple en Java qui affiche les objectifs mensuels 
 
 ## Commandes pour exécuter le projet
 
+
 ### 1. Compiler le programme :
 ```bash
 javac src/Main.java -d bin
